@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <constant name="struts.action.extension" value="action"/>
+    <constant name="struts.serve.static.browserCache" value="false"/>
+    <constant name="struts.devMode" value="false"/>
+    <constant name="struts.configuration.xml.reload" value="true"/>
+    <package name="usermng" namespace="/" extends="struts-default">
+        <interceptors>
+            <interceptor name="loginIntercepton" class="yzy.interceptor.LoginInterceptor"/>
+        </interceptors>
+        <global-allowed-methods>regex:.*</global-allowed-methods>
+        <action name="user_*" class="yzy.web.action.UserAction" method="{1}">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="loginIntercepton">
+                <param name="excludeMethods">login</param><!--不拦截对象-->
+            </interceptor-ref>
+            <result name="success">/login/home.jsp</result>
+            <result name="login">/login/login.jsp</result>
+            <result name="list">/user/list.jsp</result>
+            <result name="edit">/user/edit.jsp</result>
+            <result name="view">/user/view.jsp</result>
+            <result name="to_list" type="redirectAction">user_findAll</result>
+            <result name="download" type="stream">
+                <param name="contentType">${mineType}</param>
+                <param name="contentDisposition">attachment;filename=${frameFilename}</param>
+                <param name="inputName">input</param>
+            </result>
+        </action>
+    </package>
+</struts>
